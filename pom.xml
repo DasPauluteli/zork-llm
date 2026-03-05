@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>Zork LLM Text Adventure</name>
-    <description>LLM-powered Zork-style text adventure with Swing GUI</description>
+    <description>LLM-basiertes Textadventure im Stil von Zork mit Swing-GUI</description>
 
     <properties>
         <maven.compiler.release>25</maven.compiler.release>
