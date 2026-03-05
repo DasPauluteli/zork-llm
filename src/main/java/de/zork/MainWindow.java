@@ -229,20 +229,29 @@ public class MainWindow extends JFrame {
         gbc.insets = new Insets(2, 2, 2, 2);
 
         // Zeile 0: Nord (zentriert, volle Breite)
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(navButtons.get("north"), gbc);
 
         // Zeile 1: West links, Ost rechts
-        gbc.gridy = 1; gbc.gridwidth = 1; gbc.fill = GridBagConstraints.NONE;
-        gbc.gridx = 0; gbc.anchor = GridBagConstraints.EAST;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.EAST;
         panel.add(navButtons.get("west"), gbc);
-        gbc.gridx = 1; gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
         panel.add(navButtons.get("east"), gbc);
 
         // Zeile 2: Süd (zentriert, volle Breite)
-        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL; gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
         panel.add(navButtons.get("south"), gbc);
 
         return panel;

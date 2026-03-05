@@ -343,7 +343,6 @@ public class GameEngine {
         if (ort == null) return;
 
         if (ziel.isBlank()) {
-            // Wenn kein Ziel: ersten verfügbaren Gegner angreifen
             List<Enemy> lebende = ort.getEnemies().stream().filter(e -> !e.isDead()).toList();
             if (lebende.isEmpty()) {
                 fenster.ausgabeAnhaengen("Hier gibt es niemanden zum Angreifen.\n");
@@ -359,79 +358,89 @@ public class GameEngine {
         }
 
         StringBuilder kampfLog = new StringBuilder();
+        spielerAngriff(gegner, kampfLog);
 
-        // Spieler greift an: W20 + STR-Mod vs Gegner-Defense
+        if (gegner.isDead()) {
+            if (verarbeiteGegnerTod(gegner, kampfLog)) return;
+        } else {
+            gegnerAngriff(gegner, kampfLog);
+        }
+
+        kampfLog.append(String.format("Deine HP: %d/%d\n", spieler.getHp(), spieler.getMaxHp()));
+        fenster.ausgabeAnhaengen(kampfLog.toString());
+
+        if (spieler.istBesiegt()) {
+            spielerBesiegt();
+        } else {
+            aktualisiereUI(aktuellerOrt());
+        }
+    }
+
+    /**
+     * Führt den Spielerangriff gegen einen Gegner aus und protokolliert das Ergebnis.
+     */
+    private void spielerAngriff(Enemy gegner, StringBuilder kampfLog) {
         DiceRoller.Aktionsergebnis angriff = wuerfel.probe(spieler.getStrModifier(), gegner.getDefense());
         kampfLog.append(String.format("Du greifst %s an! (W20: %d + %d Mod = %d vs DC %d)\n",
                 gegner.getName(), angriff.wurf(), spieler.getStrModifier(),
                 angriff.wurf() + spieler.getStrModifier(), gegner.getDefense()));
 
         if (angriff.kritischerTreffer()) {
-            // Kritischer Treffer: doppelter W6-Schaden
             int schaden = wuerfel.kritischerSchadenW6(spieler.getStrModifier());
             gegner.takeDamage(schaden);
             kampfLog.append(String.format("KRITISCHER TREFFER! Du verursachst %d Schaden!\n", schaden));
-
         } else if (angriff.kritischerFehlschlag()) {
-            // Kritischer Fehlschlag: Spieler verletzt sich selbst
             int selbstSchaden = wuerfel.wurf(4);
             spieler.nimmSchaden(selbstSchaden);
             kampfLog.append(String.format("KRITISCHER FEHLSCHLAG! Du stolperst und verletzt dich für %d Schaden!\n",
                     selbstSchaden));
-
         } else if (angriff.erfolg()) {
-            // Normaler Treffer
             int schaden = wuerfel.schadenW6(spieler.getStrModifier());
             gegner.takeDamage(schaden);
             kampfLog.append(String.format("Treffer! Du verursachst %d Schaden.\n", schaden));
-
         } else {
-            // Verfehlt
             kampfLog.append("Verfehlt! Dein Angriff trifft ins Leere.\n");
         }
+    }
 
-        // Gegner tot?
-        if (gegner.isDead()) {
-            kampfLog.append(String.format("%s wurde besiegt! Du erhältst %d EP.\n",
-                    gegner.getName(), gegner.getXpReward()));
-            boolean levelUp = spieler.addXp(gegner.getXpReward());
-            if (levelUp) {
-                kampfLog.append("\n*** STUFE AUFGESTIEGEN! ***\n");
-                kampfLog.append(String.format("Du erreichst Stufe %d! +5 MaxHP.\n", spieler.getLevel()));
-                fenster.ausgabeAnhaengen(kampfLog.toString());
-                zeigeAttributspunktDialog();
-                return;
-            }
-        } else {
-            // Gegner schlägt zurück (wenn noch am Leben)
-            DiceRoller.Aktionsergebnis gegenAngriff = wuerfel.probe(gegner.getAttack(), 12);
-            kampfLog.append(String.format("%s greift zurück! (W20: %d)\n",
-                    gegner.getName(), gegenAngriff.wurf()));
-
-            if (gegenAngriff.kritischerTreffer()) {
-                int schaden = wuerfel.kritischerSchadenW6(0);
-                spieler.nimmSchaden(schaden);
-                kampfLog.append(String.format("KRITISCHER GEGENTREFFER! Du nimmst %d Schaden!\n", schaden));
-            } else if (!gegenAngriff.kritischerFehlschlag() && gegenAngriff.erfolg()) {
-                int schaden = wuerfel.schadenW6(0);
-                spieler.nimmSchaden(schaden);
-                kampfLog.append(String.format("%s trifft dich für %d Schaden.\n",
-                        gegner.getName(), schaden));
-            } else {
-                kampfLog.append(String.format("%s verfehlt dich!\n", gegner.getName()));
-            }
+    /**
+     * Verarbeitet den Tod eines Gegners: EP vergeben, ggf. Level-Up auslösen.
+     *
+     * @return true wenn ein Level-Up-Dialog angezeigt wurde (Methode kehrt früh zurück)
+     */
+    private boolean verarbeiteGegnerTod(Enemy gegner, StringBuilder kampfLog) {
+        kampfLog.append(String.format("%s wurde besiegt! Du erhältst %d EP.\n",
+                gegner.getName(), gegner.getXpReward()));
+        boolean levelUp = spieler.addXp(gegner.getXpReward());
+        if (levelUp) {
+            kampfLog.append("\n*** STUFE AUFGESTIEGEN! ***\n");
+            kampfLog.append(String.format("Du erreichst Stufe %d! +5 MaxHP.\n", spieler.getLevel()));
+            fenster.ausgabeAnhaengen(kampfLog.toString());
+            zeigeAttributspunktDialog();
+            return true;
         }
+        return false;
+    }
 
-        // HP-Anzeige nach dem Kampf
-        kampfLog.append(String.format("Deine HP: %d/%d\n", spieler.getHp(), spieler.getMaxHp()));
-        fenster.ausgabeAnhaengen(kampfLog.toString());
+    /**
+     * Führt den Gegenangriff eines Gegners aus und protokolliert das Ergebnis.
+     */
+    private void gegnerAngriff(Enemy gegner, StringBuilder kampfLog) {
+        DiceRoller.Aktionsergebnis gegenAngriff = wuerfel.probe(gegner.getAttack(), 12);
+        kampfLog.append(String.format("%s greift zurück! (W20: %d)\n",
+                gegner.getName(), gegenAngriff.wurf()));
 
-        // Tod des Spielers prüfen
-        if (spieler.istBesiegt()) {
-            spielerBesiegt();
+        if (gegenAngriff.kritischerTreffer()) {
+            int schaden = wuerfel.kritischerSchadenW6(0);
+            spieler.nimmSchaden(schaden);
+            kampfLog.append(String.format("KRITISCHER GEGENTREFFER! Du nimmst %d Schaden!\n", schaden));
+        } else if (!gegenAngriff.kritischerFehlschlag() && gegenAngriff.erfolg()) {
+            int schaden = wuerfel.schadenW6(0);
+            spieler.nimmSchaden(schaden);
+            kampfLog.append(String.format("%s trifft dich für %d Schaden.\n",
+                    gegner.getName(), schaden));
         } else {
-            // UI nach Kampf aktualisieren
-            aktualisiereUI(aktuellerOrt());
+            kampfLog.append(String.format("%s verfehlt dich!\n", gegner.getName()));
         }
     }
 
