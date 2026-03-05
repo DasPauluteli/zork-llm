@@ -76,14 +76,12 @@ public class MainWindow extends JFrame {
         eingabeBereich = new JTextField();
         sendenButton = new JButton("Senden");
 
-        // Navigationsbuttons erstellen (alle 6 Richtungen inkl. hoch/runter)
-        navButtons = Map.ofEntries(
-                Map.entry("north", new JButton("Nord  ↑")),
-                Map.entry("south", new JButton("↓  Süd")),
-                Map.entry("east",  new JButton("Ost  →")),
-                Map.entry("west",  new JButton("←  West")),
-                Map.entry("up",    new JButton("▲ Hoch")),
-                Map.entry("down",  new JButton("▼ Runter"))
+        // Navigationsbuttons erstellen (4 Himmelsrichtungen)
+        navButtons = Map.of(
+                "north", new JButton("Nord  ↑"),
+                "south", new JButton("↓  Süd"),
+                "east",  new JButton("Ost  →"),
+                "west",  new JButton("←  West")
         );
 
         // Statustabelle initialisieren
@@ -201,15 +199,13 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Erstellt das Navigations-Panel mit 6 Richtungsbuttons (N/S/O/W + Hoch/Runter).
+     * Erstellt das Navigations-Panel mit 4 Richtungsbuttons (N/S/O/W).
      *
      * <p>Layout (von oben nach unten):
      * <pre>
-     *   [▲ Hoch]
-     *   [Nord ↑]
+     *   [Nord  ↑]
      *   [← West] [Ost →]
-     *   [↓ Süd]
-     *   [▼ Runter]
+     *   [↓  Süd]
      * </pre>
      *
      * @return Panel mit den Navigationsbuttons
@@ -221,48 +217,33 @@ public class MainWindow extends JFrame {
                 TitledBorder.LEFT, TitledBorder.TOP));
         panel.setPreferredSize(new Dimension(135, 0));
 
-        // Haupt-Richtungsbuttons (Nord/Süd/Ost/West) stylen
-        Dimension hauptGroesse = new Dimension(58, 32);
-        Font hauptFont = new Font(Font.SANS_SERIF, Font.BOLD, 11);
+        // Richtungsbuttons stylen
+        Dimension buttonGroesse = new Dimension(58, 32);
+        Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 11);
         for (String dir : new String[]{"north", "south", "east", "west"}) {
-            navButtons.get(dir).setPreferredSize(hauptGroesse);
-            navButtons.get(dir).setFont(hauptFont);
-        }
-        // Vertikal-Buttons (Hoch/Runter) etwas kleiner
-        Dimension vertGroesse = new Dimension(116, 26);
-        Font vertFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);
-        for (String dir : new String[]{"up", "down"}) {
-            navButtons.get(dir).setPreferredSize(vertGroesse);
-            navButtons.get(dir).setFont(vertFont);
+            navButtons.get(dir).setPreferredSize(buttonGroesse);
+            navButtons.get(dir).setFont(buttonFont);
         }
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(2, 2, 2, 2);
 
-        // Zeile 0: Hoch-Button (zentriert, volle Breite)
+        // Zeile 0: Nord (zentriert, volle Breite)
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(navButtons.get("up"), gbc);
-
-        // Zeile 1: Nord (zentriert, volle Breite)
-        gbc.gridy = 1;
         panel.add(navButtons.get("north"), gbc);
 
-        // Zeile 2: West links, Ost rechts - GridWidth auf 1 zurücksetzen
-        gbc.gridy = 2; gbc.gridwidth = 1; gbc.fill = GridBagConstraints.NONE;
+        // Zeile 1: West links, Ost rechts
+        gbc.gridy = 1; gbc.gridwidth = 1; gbc.fill = GridBagConstraints.NONE;
         gbc.gridx = 0; gbc.anchor = GridBagConstraints.EAST;
         panel.add(navButtons.get("west"), gbc);
         gbc.gridx = 1; gbc.anchor = GridBagConstraints.WEST;
         panel.add(navButtons.get("east"), gbc);
 
-        // Zeile 3: Süd (zentriert, volle Breite)
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+        // Zeile 2: Süd (zentriert, volle Breite)
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL; gbc.anchor = GridBagConstraints.CENTER;
         panel.add(navButtons.get("south"), gbc);
-
-        // Zeile 4: Runter-Button (zentriert, volle Breite)
-        gbc.gridy = 4;
-        panel.add(navButtons.get("down"), gbc);
 
         return panel;
     }
@@ -331,59 +312,7 @@ public class MainWindow extends JFrame {
 
         JMenu hilfeMenu = new JMenu("Hilfe");
         JMenuItem ueberItem = new JMenuItem("Über Zork LLM");
-        ueberItem.addActionListener(e -> {
-            JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-            String infoText = "<html><div style='text-align: center;'>" +
-                    "<b>Zork LLM - Fantasy Text-Adventure</b><br>" +
-                    "Ein LLM-gestütztes Textabenteuer im Stil von Zork.<br><br>" +
-                    "Technologie: Java 25 (ekelhaft), Swing, Jackson, OkHttp<br>" +
-                    "API: OpenAI-kompatibel<br><br></div></html>";
-            JLabel textLabel = new JLabel(infoText);
-            textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(textLabel);
-
-            JLabel githubLabel = new JLabel(new ImageIcon(new ImageIcon(MainWindow.class.getResource("/GitHub_Invertocat_Black.png")).getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH))); // Alles hier nur für ein Icon 🖕 Java, leck eier
-            githubLabel.setForeground(Color.BLUE.darker());
-            githubLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            githubLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            githubLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                String url = "https://github.com/DasPauluteli/zork-llm";
-                try {
-                    // Erst versuchen wir den offiziellen Java-Weg
-                    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                        Desktop.getDesktop().browse(new URI(url));
-                    } else {
-                        // Manuelle Fallbacks für verschiedene Betriebssysteme
-                        String os = System.getProperty("os.name").toLowerCase();
-                        Runtime runtime = Runtime.getRuntime();
-
-                        if (os.contains("win")) {
-                            // Windows Fallback
-                            runtime.exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
-                        } else if (os.contains("mac")) {
-                            // macOS Fallback
-                            runtime.exec(new String[]{"open", url});
-                        } else {
-                            // Linux / Unix Fallback
-                            runtime.exec(new String[]{"xdg-open", url});
-                        }
-                    }
-                } catch (Exception ex) {
-                    // Wenn gar nichts geht, zeigen wir dem User zumindest die URL
-                    JOptionPane.showMessageDialog(null, 
-                        "Browser konnte nicht automatisch geöffnet werden.\nURL: " + url, 
-                        "Link öffnen", JOptionPane.WARNING_MESSAGE);
-                    ex.printStackTrace();
-                }
-            }
-        });
-            panel.add(githubLabel);
-            JOptionPane.showMessageDialog(this, panel, "Über Zork LLM", JOptionPane.PLAIN_MESSAGE);
-        });
+        ueberItem.addActionListener(e -> zeigeUeberDialog());
         hilfeMenu.add(ueberItem);
 
         menuLeiste.add(spielMenu);
@@ -402,8 +331,8 @@ public class MainWindow extends JFrame {
         // Enter-Taste im Eingabefeld
         eingabeBereich.addActionListener(e -> eingabeVerarbeiten());
 
-        // Navigationsbuttons - alle 6 Richtungen
-        for (String richtung : new String[]{"north", "south", "east", "west", "up", "down"}) {
+        // Navigationsbuttons
+        for (String richtung : new String[]{"north", "south", "east", "west"}) {
             final String r = richtung;
             navButtons.get(r).addActionListener(e -> {
                 if (spielEngine != null) spielEngine.bewegeInRichtung(r);
@@ -495,6 +424,66 @@ public class MainWindow extends JFrame {
     private void zeigeEinstellungen() {
         SettingsWindow dialog = new SettingsWindow(this, einstellungen);
         dialog.setVisible(true);
+    }
+
+    /**
+     * Zeigt den "Über"-Dialog mit Projektinfo und GitHub-Link.
+     */
+    private void zeigeUeberDialog() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        String infoText = "<html><div style='text-align: center;'>" +
+                "<b>Zork LLM - Fantasy Text-Adventure</b><br>" +
+                "Ein LLM-gestütztes Textabenteuer im Stil von Zork.<br><br>" +
+                "Technologie: Java 25 (ekelhaft), Swing, Jackson, OkHttp<br>" +
+                "API: OpenAI-kompatibel<br><br></div></html>";
+        JLabel textLabel = new JLabel(infoText);
+        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(textLabel);
+
+        ImageIcon rawIcon = new ImageIcon(MainWindow.class.getResource("/GitHub_Invertocat_Black.png"));
+        Image scaledImage = rawIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+        JLabel githubLabel = new JLabel(new ImageIcon(scaledImage));
+        githubLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        githubLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        githubLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                oeffneBrowser("https://github.com/DasPauluteli/zork-llm");
+            }
+        });
+        panel.add(githubLabel);
+
+        JOptionPane.showMessageDialog(this, panel, "Über Zork LLM", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    /**
+     * Öffnet eine URL im Standardbrowser. Fällt auf betriebssystemspezifische
+     * Kommandos zurück wenn {@link Desktop} nicht verfügbar ist.
+     *
+     * @param url die zu öffnende URL
+     */
+    private void oeffneBrowser(String url) {
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(url));
+                return;
+            }
+            String os = System.getProperty("os.name").toLowerCase();
+            Runtime runtime = Runtime.getRuntime();
+            if (os.contains("win")) {
+                runtime.exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
+            } else if (os.contains("mac")) {
+                runtime.exec(new String[]{"open", url});
+            } else {
+                runtime.exec(new String[]{"xdg-open", url});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Browser konnte nicht geöffnet werden.\nURL: " + url,
+                    "Link öffnen", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     // =========================================================================

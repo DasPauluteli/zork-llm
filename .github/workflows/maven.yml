@@ -39,12 +39,8 @@ jobs:
           --copyright "Copyright 2026 DasPauluteli" `
           --description "Abenteuer im Zork-Stil mit Swing-GUI"
 
-    - name: Zip for Distribution
-      shell: pwsh
-      run: Compress-Archive -Path dist/ZorkLLM -DestinationPath ZorkLLM_Portable_Windows.zip
-
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Zork-LLM-Windows-Portable
-        path: ZorkLLM_Portable_Windows.zip
+        path: dist/ZorkLLM/

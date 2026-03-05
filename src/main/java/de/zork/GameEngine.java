@@ -685,30 +685,30 @@ public class GameEngine {
                 ┌─────────────────────────────────────────────────┐
                 │                  BEFEHLSLISTE                   │
                 ├─────────────────────────────────────────────────┤
-                │ BEWEGUNG:                                        │
-                │  nord/süd/ost/west  - In Richtung gehen        │
+                │ BEWEGUNG:                                       │
+                │  nord/süd/ost/west  - In Richtung gehen         │
                 │  gehe [richtung]    - Alternative Bewegung      │
-                │                                                  │
-                │ ERKUNDUNG:                                       │
+                │                                                 │
+                │ ERKUNDUNG:                                      │
                 │  schau              - Ort neu beschreiben       │
                 │  untersuche [name]  - Gegenstand untersuchen    │
-                │                                                  │
-                │ INVENTAR:                                        │
+                │                                                 │
+                │ INVENTAR:                                       │
                 │  inventar           - Inventar anzeigen         │
                 │  nimm [name]        - Gegenstand aufnehmen      │
                 │  lasse [name]       - Gegenstand fallen lassen  │
                 │  benutze [name]     - Gegenstand benutzen       │
-                │                                                  │
-                │ KAMPF:                                           │
+                │                                                 │
+                │ KAMPF:                                          │
                 │  angriff [name]     - Gegner angreifen          │
-                │                                                  │
-                │ SOZIAL:                                          │
-                │  rede [name]        - Mit jemandem reden         │
-                │                                                  │
-                │ SONSTIGES:                                       │
+                │                                                 │
+                │ SOZIAL:                                         │
+                │  rede [name]        - Mit jemandem reden        │
+                │                                                 │
+                │ SONSTIGES:                                      │
                 │  status             - Charakter-Stats anzeigen  │
                 │  hilfe              - Diese Hilfe anzeigen      │
-                │                                                  │
+                │                                                 │
                 │ Freie Eingabe wird als Aktion interpretiert!    │
                 └─────────────────────────────────────────────────┘
                 """);
@@ -771,7 +771,7 @@ public class GameEngine {
 
                 ╔══════════════════════════════════════════════════╗
                 ║               DU BIST GESTORBEN!                 ║
-                ║                                                   ║
+                ║                                                  ║
                 ║  Die Dunkelheit hüllt dich ein...                ║
                 ║  Starte ein neues Spiel über das Menü.           ║
                 ╚══════════════════════════════════════════════════╝
