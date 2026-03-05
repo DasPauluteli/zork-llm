@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public class WorldGenerator {
 
-    /** Systemanweisung für den LLM – definiert die Rolle als Dungeon-Master. */
+    /** Systemanweisung für den LLM - definiert die Rolle als Dungeon-Master. */
     private static final String SYSTEM_PROMPT =
             "Du bist ein Dungeon-Master für ein Fantasy-Textadventure. " +
             "Antworte NUR mit einem JSON-Objekt ohne Markdown-Formatierung oder Codeblöcke. " +

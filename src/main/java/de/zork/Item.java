@@ -134,6 +134,6 @@ public class Item {
 
     @Override
     public String toString() {
-        return name + (description != null && !description.isEmpty() ? " – " + description : "");
+        return name + (description != null && !description.isEmpty() ? " - " + description : "");
     }
 }

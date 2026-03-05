@@ -20,7 +20,7 @@ import javax.swing.*;
 public class Main {
 
     /**
-     * Hauptmethode – Einstiegspunkt der Anwendung.
+     * Hauptmethode - Einstiegspunkt der Anwendung.
      *
      * @param args Kommandozeilenargumente (werden ignoriert)
      */
@@ -38,7 +38,7 @@ public class Main {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            // Fallback auf Standard-Swing-Look-and-Feel – kein kritischer Fehler
+            // Fallback auf Standard-Swing-Look-and-Feel - kein kritischer Fehler
             System.err.println("Warnung: System-Look-and-Feel nicht verfügbar: " + e.getMessage());
         }
 
@@ -58,7 +58,7 @@ public class Main {
         // Begrüßungsbildschirm anzeigen
         fenster.ausgabeAnhaengen("""
                 ╔══════════════════════════════════════════════════════════╗
-                ║           ZORK LLM – FANTASY TEXT-ADVENTURE             ║
+                ║           ZORK LLM - FANTASY TEXT-ADVENTURE             ║
                 ║                                                          ║
                 ║  Ein LLM-generiertes Abenteuer im Stil von Zork.        ║
                 ║                                                          ║

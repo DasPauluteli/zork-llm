@@ -12,11 +12,11 @@ import java.util.Map;
  *
  * <p><b>Attribute:</b>
  * <ul>
- *   <li>HP / MaxHP – Lebenspunkte</li>
- *   <li>Stufe / EP – Progression</li>
- *   <li>STR – Stärke (Nahkampf, Kraftproben)</li>
- *   <li>GES – Geschicklichkeit (Ausweichen, Schlösser)</li>
- *   <li>INT – Intelligenz (Überreden, Magie)</li>
+ *   <li>HP / MaxHP - Lebenspunkte</li>
+ *   <li>Stufe / EP - Progression</li>
+ *   <li>STR - Stärke (Nahkampf, Kraftproben)</li>
+ *   <li>GES - Geschicklichkeit (Ausweichen, Schlösser)</li>
+ *   <li>INT - Intelligenz (Überreden, Magie)</li>
  * </ul>
  *
  * <p>Jedes Attribut über 10 gewährt einen Modifikator nach D&amp;D-Formel: {@code (Wert - 10) / 2}.</p>

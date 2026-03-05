@@ -26,7 +26,7 @@ public class DiceRoller {
     public record Aktionsergebnis(
             /** {@code true} wenn die Probe bestanden wurde */
             boolean erfolg,
-            /** Das rohe W20-Ergebnis (1–20) */
+            /** Das rohe W20-Ergebnis (1-20) */
             int wurf,
             /** {@code true} bei natürlicher 20 (kritischer Treffer) */
             boolean kritischerTreffer,
@@ -54,7 +54,7 @@ public class DiceRoller {
      *
      * <p>Ablauf:
      * <ol>
-     *   <li>W20 werfen → roher Wert 1–20</li>
+     *   <li>W20 werfen → roher Wert 1-20</li>
      *   <li>Natürliche 20: sofortiger kritischer Treffer (Erfolg)</li>
      *   <li>Natürliche 1: sofortiger kritischer Fehlschlag (Misserfolg)</li>
      *   <li>Sonst: {@code wurf + modifikator >= dc} → Erfolg</li>

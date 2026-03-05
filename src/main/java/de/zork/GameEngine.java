@@ -136,7 +136,7 @@ public class GameEngine {
 
         fenster.ausgabeAnhaengen("\n> " + eingabe + "\n");
 
-        // Befehlsauflösung – Deutsch und Englisch werden akzeptiert
+        // Befehlsauflösung - Deutsch und Englisch werden akzeptiert
         switch (befehl) {
             case "hilfe", "help", "?" -> zeigeHilfe();
             case "schau", "look", "l", "umschauen" -> beschreibeAktuellenOrt();
@@ -686,28 +686,28 @@ public class GameEngine {
                 │                  BEFEHLSLISTE                   │
                 ├─────────────────────────────────────────────────┤
                 │ BEWEGUNG:                                        │
-                │  nord/süd/ost/west  – In Richtung gehen        │
-                │  gehe [richtung]    – Alternative Bewegung      │
+                │  nord/süd/ost/west  - In Richtung gehen        │
+                │  gehe [richtung]    - Alternative Bewegung      │
                 │                                                  │
                 │ ERKUNDUNG:                                       │
-                │  schau              – Ort neu beschreiben       │
-                │  untersuche [name]  – Gegenstand untersuchen    │
+                │  schau              - Ort neu beschreiben       │
+                │  untersuche [name]  - Gegenstand untersuchen    │
                 │                                                  │
                 │ INVENTAR:                                        │
-                │  inventar           – Inventar anzeigen         │
-                │  nimm [name]        – Gegenstand aufnehmen      │
-                │  lasse [name]       – Gegenstand fallen lassen  │
-                │  benutze [name]     – Gegenstand benutzen       │
+                │  inventar           - Inventar anzeigen         │
+                │  nimm [name]        - Gegenstand aufnehmen      │
+                │  lasse [name]       - Gegenstand fallen lassen  │
+                │  benutze [name]     - Gegenstand benutzen       │
                 │                                                  │
                 │ KAMPF:                                           │
-                │  angriff [name]     – Gegner angreifen          │
+                │  angriff [name]     - Gegner angreifen          │
                 │                                                  │
                 │ SOZIAL:                                          │
-                │  rede [name]        – Mit jemandem reden         │
+                │  rede [name]        - Mit jemandem reden         │
                 │                                                  │
                 │ SONSTIGES:                                       │
-                │  status             – Charakter-Stats anzeigen  │
-                │  hilfe              – Diese Hilfe anzeigen      │
+                │  status             - Charakter-Stats anzeigen  │
+                │  hilfe              - Diese Hilfe anzeigen      │
                 │                                                  │
                 │ Freie Eingabe wird als Aktion interpretiert!    │
                 └─────────────────────────────────────────────────┘

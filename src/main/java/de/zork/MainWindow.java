@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Map;
+import java.net.URI;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Hauptfenster der Zork-LLM-Anwendung.
@@ -65,7 +68,7 @@ public class MainWindow extends JFrame {
      * @param einstellungen der Einstellungsmanager für API-Konfiguration
      */
     public MainWindow(SettingsManager einstellungen) {
-        super("Zork LLM – Fantasy Text-Adventure");
+        super("Zork LLM - Fantasy Text-Adventure");
         this.einstellungen = einstellungen;
 
         // GUI-Komponenten initialisieren
@@ -245,7 +248,7 @@ public class MainWindow extends JFrame {
         gbc.gridy = 1;
         panel.add(navButtons.get("north"), gbc);
 
-        // Zeile 2: West links, Ost rechts – GridWidth auf 1 zurücksetzen
+        // Zeile 2: West links, Ost rechts - GridWidth auf 1 zurücksetzen
         gbc.gridy = 2; gbc.gridwidth = 1; gbc.fill = GridBagConstraints.NONE;
         gbc.gridx = 0; gbc.anchor = GridBagConstraints.EAST;
         panel.add(navButtons.get("west"), gbc);
@@ -326,15 +329,61 @@ public class MainWindow extends JFrame {
 
         einstellungsMenu.add(apiItem);
 
-        // Menü "Hilfe"
         JMenu hilfeMenu = new JMenu("Hilfe");
         JMenuItem ueberItem = new JMenuItem("Über Zork LLM");
-        ueberItem.addActionListener(e -> JOptionPane.showMessageDialog(this,
-                "Zork LLM – Fantasy Text-Adventure\n" +
-                "Ein LLM-gestütztes Textabenteuer im Stil von Zork.\n\n" +
-                "Technologie: Java 25, Swing, Jackson, OkHttp\n" +
-                "API: OpenAI-kompatibel",
-                "Über Zork LLM", JOptionPane.INFORMATION_MESSAGE));
+        ueberItem.addActionListener(e -> {
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+            String infoText = "<html><div style='text-align: center;'>" +
+                    "<b>Zork LLM - Fantasy Text-Adventure</b><br>" +
+                    "Ein LLM-gestütztes Textabenteuer im Stil von Zork.<br><br>" +
+                    "Technologie: Java 25 (ekelhaft), Swing, Jackson, OkHttp<br>" +
+                    "API: OpenAI-kompatibel<br><br></div></html>";
+            JLabel textLabel = new JLabel(infoText);
+            textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(textLabel);
+
+            JLabel githubLabel = new JLabel(new ImageIcon(new ImageIcon(MainWindow.class.getResource("/GitHub_Invertocat_Black.png")).getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH))); // Alles hier nur für ein Icon 🖕 Java, leck eier
+            githubLabel.setForeground(Color.BLUE.darker());
+            githubLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            githubLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            githubLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String url = "https://github.com/DasPauluteli/zork-llm";
+                try {
+                    // Erst versuchen wir den offiziellen Java-Weg
+                    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                        Desktop.getDesktop().browse(new URI(url));
+                    } else {
+                        // Manuelle Fallbacks für verschiedene Betriebssysteme
+                        String os = System.getProperty("os.name").toLowerCase();
+                        Runtime runtime = Runtime.getRuntime();
+
+                        if (os.contains("win")) {
+                            // Windows Fallback
+                            runtime.exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
+                        } else if (os.contains("mac")) {
+                            // macOS Fallback
+                            runtime.exec(new String[]{"open", url});
+                        } else {
+                            // Linux / Unix Fallback
+                            runtime.exec(new String[]{"xdg-open", url});
+                        }
+                    }
+                } catch (Exception ex) {
+                    // Wenn gar nichts geht, zeigen wir dem User zumindest die URL
+                    JOptionPane.showMessageDialog(null, 
+                        "Browser konnte nicht automatisch geöffnet werden.\nURL: " + url, 
+                        "Link öffnen", JOptionPane.WARNING_MESSAGE);
+                    ex.printStackTrace();
+                }
+            }
+        });
+            panel.add(githubLabel);
+            JOptionPane.showMessageDialog(this, panel, "Über Zork LLM", JOptionPane.PLAIN_MESSAGE);
+        });
         hilfeMenu.add(ueberItem);
 
         menuLeiste.add(spielMenu);
@@ -353,7 +402,7 @@ public class MainWindow extends JFrame {
         // Enter-Taste im Eingabefeld
         eingabeBereich.addActionListener(e -> eingabeVerarbeiten());
 
-        // Navigationsbuttons – alle 6 Richtungen
+        // Navigationsbuttons - alle 6 Richtungen
         for (String richtung : new String[]{"north", "south", "east", "west", "up", "down"}) {
             final String r = richtung;
             navButtons.get(r).addActionListener(e -> {

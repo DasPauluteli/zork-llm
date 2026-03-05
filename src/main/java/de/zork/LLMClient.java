@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * werden aus dem {@link SettingsManager} gelesen.</p>
  *
  * <p>Alle Anfragen sind synchron und sollten daher außerhalb des
- * Swing Event Dispatch Thread (EDT) ausgeführt werden – z.B. in einem
+ * Swing Event Dispatch Thread (EDT) ausgeführt werden - z.B. in einem
  * {@link javax.swing.SwingWorker}.</p>
  */
 public class LLMClient {
